@@ -166,6 +166,17 @@ void	print_level(std::vector<Node *> vec, int level, int height, int factor, int
 	}
 }
 
+void	print_vertical_branches(int branch_legth, int factor)
+{
+	bool is_first = true;
+	if (is_first)
+	{
+		separator(pow(2.0, factor) - 1 - branch_legth, ' ');
+		is_first = false;
+		std::cout << "|";
+	}
+}
+
 void    print_tree(Node *root)
 {
 	int height = 4;
@@ -176,6 +187,7 @@ void    print_tree(Node *root)
 		int branch_legth = (pow(2.0, factor) / 2) - 4;
 		print_level(vec[level], level, height, factor, branch_legth == 0 ? 2 : branch_legth);
 		std::cout << std::endl;
+		print_vertical_branches(branch_legth, factor);
 		std::cout << std::endl;
 	}
 }
