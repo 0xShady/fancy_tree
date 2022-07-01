@@ -10,29 +10,7 @@
 #include <cmath>
 #include "../test.hpp"
 
-// void    print_tree(Node *root)
-// {
-//     Node *tmp = root;
-//     if (root == nullptr)
-//         return;
-//     std::cout << std::setw(20);
-//     std::cout << root->_value << std::endl;
 
-// }
-
-// void tree_debug(const std::string &prefix, const Node *node, bool isLeft)
-// {
-//     if (node != NULL)
-//     {
-//         std::cout << prefix;
-//         std::cout << (isLeft ? "├──" : "└──");
-//         std::cout << "|" << node->_value << std::endl;
-//         tree_debug(prefix + (isLeft ? "│   " : "    "), node->_left, true);
-//         tree_debug(prefix + (isLeft ? "│   " : "    "), node->_right, false);
-//     }
-// }
-
-// calculate an integer's lehn of digits
 int int_len(int n)
 {
 	int count = 0;
@@ -43,29 +21,6 @@ int int_len(int n)
 	}
 	return count;
 }
-
-// void print_tree(const Node *root)
-// {
-//     // int level = 4;
-//     std::cout << std::setw(4);
-//     std::cout << root->_value;
-//     std::cout << std::setw(3 - int_len(root->_value));
-//     std::cout << std::setw(4);
-//     // tree_debug("$", root, false);
-// }
-
-
-// insert tree to a vector level by level
-// void insert_tree(const Node *root, std::vector<std::vector<int> > &vec)
-// {
-//     if (root == nullptr)
-//         return;
-//     std::vector<int> tmp;
-//     tmp.push_back(root->_value);
-//     vec.push_back(tmp);
-//     insert_tree(root->_left, vec);
-//     insert_tree(root->_right, vec);
-// }
 
 std::vector<Node *> childs_vectors_filler(std::vector<std::vector<Node *> > vec, int level)
 {
@@ -99,97 +54,218 @@ std::vector<std::vector<Node *> >	master_vector_filler(Node *root, int height)
 	return vec;
 }
 
-void    separator(int count, char c)
+void    separator(int count, std::string str)
 {
 	for (int i = 0; i < count; i++)
-		std::cout << c;
+		std::cout << str;
 }
 
-void    print_node(int value)
+void    print_node(Node *node)
 {
-	std::cout << value;
-	int len = 4 - int_len(value);
-	separator(len, ' ');
+	if (node == nullptr)
+		std::cout << "NULL";
+	else
+	{
+		std::cout << node->_value;
+		int len = 4 - int_len(node->_value);
+		separator(len, " ");
+	}
 }
 
 void	print_left_branch(int len)
 {
 	std::cout << "┌";
-	separator(len - 1, '-');
+	separator(len - 1, "─");
 	std::cout << "┤";
 }
 
 void	print_right_branch(int len)
 {
 	std::cout << "├";
-	separator(len - 1, '-');
+	separator(len - 1, "─");
 	std::cout << "┐";
 }
 
 void	print_level(std::vector<Node *> vec, int level, int height, int factor, int branch_legth)
 {
 	bool is_first = true;
-	// int number_of_leafs = pow(2, height);
-	// std::cout << "factor: " << factor << std::endl;
 	for (int i = 0; i < vec.size(); i++)
 	{
 		int ratio;
 		if (level == height)
 		{
-			separator(pow(2.0, factor) - (is_first ? 1 : 2), ' ');
-			std::cout << "|";
-			print_node(vec[i]->_value);
-			std::cout << "|";
+			separator(pow(2.0, factor) - (is_first ? 1 : 2), " ");
+			std::cout << "│";
+			print_node(vec[i]);
+			std::cout << "│";
 			is_first = false;
 		}
 		else if (is_first && level != height)
 		{
-			separator(pow(2.0, factor) - 1 - branch_legth, ' ');
+			separator(pow(2.0, factor) - 1 - branch_legth, " ");
 			print_left_branch(branch_legth);
-			print_node(vec[i]->_value);
+			print_node(vec[i]);
 			print_right_branch(branch_legth);
 			is_first = false;
 		}
 		else
 		{
-			separator((pow(2.0, factor + 1)) - 6 - (branch_legth * 2), ' ');
+			separator((pow(2.0, factor + 1)) - 6 - (branch_legth * 2), " ");
 			print_left_branch(branch_legth);
-			// std::cout << "|";
-			print_node(vec[i]->_value);
-			// std::cout << "|";
+			print_node(vec[i]);
 			print_right_branch(branch_legth);
 		}
-		// if (vec[i] != nullptr)
-		//     print_node(vec[i]->_value, (height != level));
-		// else
-		//     std::cout << "|NULL|";
 	}
 }
 
-// void print_node_frame(int gape)
-// {
+void	branch_printer(int len)
+{
+	std::cout << "┌";
+	separator(3, "─");
+	std::cout << "┴";
+	std::cout << "┐";
+	separator(len - 4, " ");
+	std::cout << "┌";
+	std::cout << "┴";
+	separator(3, "─");
+	std::cout << "┐";
+}
 
-// 	return ;
-// }
+void	branch_printer_before_last(int len)
+{
+	std::cout << "┌";
+	std::cout << "─";
+	std::cout << "┴";
+	separator(2, "─");
+	std::cout << "┐";
+	separator(2, " ");
+	std::cout << "┌";
+	separator(2, "─");
+	std::cout << "┴";
+	std::cout << "─";
+	std::cout << "┐";
+}
 
-void	print_vertical_branches(int branch_legth, int factor, int num_of_branches)
+void print_vertical_branches_mid(int branch_legth, int factor, int num_of_branches, bool before_last)
 {
 	bool is_first = true;
-	for (size_t i = 0; i < num_of_branches; i++)
+	for (size_t i = 0; i < num_of_branches / 2; i++)
 	{
 		if (is_first)
 		{
-			separator(pow(2.0, factor) - 1 - branch_legth, ' ');
-			std::cout << "|";
+			separator(pow(2.0, factor) - 1 - branch_legth, " ");
+			std::cout << "│";
+			separator((branch_legth * 2) + 4, " ");
+			std::cout << "│";
 			is_first = false;
 		}
 		else
 		{
-			separator(pow(2.0, factor) - 1 + branch_legth, ' ');
-			std::cout << "|";
+			separator((pow(2.0, factor + 1)) - 6 - (branch_legth * 2), " ");
+			std::cout << "│";
+			separator((branch_legth * 2) + 4, " ");
+			std::cout << "│";
 		}
 	}
 }
+
+void print_leafs_frame(int num_of_leafs)
+{
+	bool is_first = true;
+	for (size_t i = 0; i < num_of_leafs / 2; i++)
+	{
+		if (is_first)
+		{
+			separator(3, " ");
+			std::cout << "└";
+			separator(4, "─");
+			std::cout << "┘";
+			separator(2, " ");
+			std::cout << "└";
+			separator(4, "─");
+			std::cout << "┘";
+			is_first = false;
+		}
+		else
+		{
+			separator(2, " ");
+			std::cout << "└";
+			separator(4, "─");
+			std::cout << "┘";
+			separator(2, " ");
+			std::cout << "└";
+			separator(4, "─");
+			std::cout << "┘";
+		}
+	}
+}
+
+void print_vertical_branches_top(int branch_legth, int factor, int num_of_branches, bool before_last)
+{
+	bool is_first = true;
+	for (size_t i = 0; i < num_of_branches / 2; i++)
+	{
+		if (is_first)
+		{
+			separator(pow(2.0, factor) - 1 - branch_legth, " ");
+			std::cout << "│";
+			separator(branch_legth -  1, " ");
+			std::cout << "└";
+			separator(4, "─");
+			std::cout << "┘";
+			separator(branch_legth - 1, " ");
+			std::cout << "│";
+			is_first = false;
+		}
+		else
+		{
+			separator((pow(2.0, factor + 1)) - 6 - (branch_legth * 2), " ");
+			std::cout << "│";
+			separator(branch_legth - 1, " ");
+			std::cout << "└";
+			separator(4, "─");
+			std::cout << "┘";
+			separator(branch_legth - 1, " ");
+			std::cout << "│";
+		}
+	}
+}
+
+void	print_vertical_branches_bottom(int branch_legth, int factor, int num_of_branches, bool before_last)
+{
+	bool is_first = true;
+	for (size_t i = 0; i < num_of_branches / 2; i++)
+	{
+		if (is_first)
+		{
+			if (before_last)
+			{
+				separator(pow(2.0, factor) - 3 - branch_legth, " ");
+				branch_printer_before_last((branch_legth * 2) + 2);
+			}
+			else
+			{
+				separator(pow(2.0, factor) - branch_legth - 5, " ");
+				branch_printer((branch_legth * 2) + 6);
+			}
+			is_first = false;
+		}
+		else
+		{
+			if (before_last)
+			{
+				separator(pow(2.0, factor + 1) - (branch_legth * 2) - 10, " ");
+				branch_printer_before_last((branch_legth * 2) + 2);
+			}
+			else
+			{
+				separator(pow(2.0, factor + 1) - (branch_legth * 2) - 14, " ");
+				branch_printer((branch_legth * 2) + 6);
+			}
+		}
+	}
+}
+
 
 void    print_tree(Node *root)
 {
@@ -199,10 +275,26 @@ void    print_tree(Node *root)
 	{
 		int factor = height - level + 2;
 		int branch_legth = ((pow(2.0, factor) / 2 - 4) == 0) ? 2 : (pow(2.0, factor) / 2) - 4;
+		if (level == 0)
+		{
+			separator(pow(2.0, factor) - 1, " ");
+			std::cout << "┌";
+			separator(4, "─");
+			std::cout << "┐";
+			std::cout << std::endl;
+		}
 		print_level(vec[level], level, height, factor, branch_legth);
 		std::cout << std::endl;
 		if (level != height)
-			print_vertical_branches(branch_legth, factor, vec[level].size() * 2);
+		{
+			print_vertical_branches_top(branch_legth, factor, vec[level].size() * 2, (level == height - 1));
+			std::cout << std::endl;
+			print_vertical_branches_mid(branch_legth, factor, vec[level].size() * 2, (level == height - 1));
+			std::cout << std::endl;
+			print_vertical_branches_bottom(branch_legth, factor, vec[level].size() * 2, (level == height - 1));
+		}
+		else
+			print_leafs_frame(vec[level].size());
 		std::cout << std::endl;
 	}
 }

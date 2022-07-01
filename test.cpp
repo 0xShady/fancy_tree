@@ -34,7 +34,7 @@ int main()
     root->_right->_right->_left->_left = new Node(28);
     root->_right->_right->_left->_right = new Node(29);
     root->_right->_right->_right->_left = new Node(30);
-    root->_right->_right->_right->_right = new Node(31);
+    // root->_right->_right->_right->_right = new Node(31);
     print_tree(root);
 
     // std::cout << ">>" << root->_left->_left->_left->_value << std::endl;
