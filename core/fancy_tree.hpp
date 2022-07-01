@@ -269,7 +269,7 @@ void	print_vertical_branches_bottom(int branch_legth, int factor, int num_of_bra
 
 void    print_tree(Node *root)
 {
-	int height = 4;
+	int height = 5;
 	std::vector<std::vector<Node *> > vec = master_vector_filler(root, height);
 	for (int level = 0; level < vec.size(); level++)
 	{
