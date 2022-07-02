@@ -1,0 +1,8 @@
+*/.DS_store
+.DS_store
+*.out
+*log*
+.vscode
+tests/*
+tests
+*.bat
