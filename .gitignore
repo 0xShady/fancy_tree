@@ -1,5 +1,6 @@
 */.DS_store
 .DS_store
+*.out.*
 *.out
 *log*
 .vscode
