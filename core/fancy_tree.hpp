@@ -4,12 +4,17 @@
 #include <iostream>
 #include <vector>
 #include <cmath>
+
+//header file that contains Node definition
 #include "../test.hpp"
 
 // Constants values
 #define LEAFS_SPAN 2
 #define NODE_WIDTH 6
 #define CONTENT_LEN 4
+
+#define H_VIEW 0x00
+#define V_VIEW 0x01
 
 // Node class attributes
 #define LEFT _left
@@ -20,14 +25,85 @@
 // Node class
 #define NODE Node
 
+// vertical view
 #define TOP_LEFT_FRAME "┌───┴┐"
 #define TOP_RIGHT_FRAME "┌┴───┐"
 #define RIGHT_LEAF_FRAME "┌──┴─┐"
 #define LEFT_LEAF_FRAME "┌─┴──┐"
 #define FRAME_BOTTOM "└────┘"
 #define FRAME_TOP "┌────┐"
-#define NEW_LINE std::cout << std::endl
+
+// horizontal view
+#define BIG_TRUNK "    │"
+#define SMALL_TRUNK "   │"
+#define LEFT_TRUNK "┌──┤"
+#define RIGHT_TRUNK "└──┤"
+#define BIG_SPAN "    "
+#define SMALL_SPAN "   "
+#define ROOT_TRUNK "──┤"
+
+// frequently used
+#define NEW_LINE std::endl
 #define PRINT std::cout
+
+// helper linked list
+struct	Branch
+{
+	Branch		*prev;
+	std::string	str;
+
+	Branch(Branch *prev, std::string str)
+	{
+		this->prev = prev;
+		this->str = str;
+	}
+};
+
+// fill tree in vector
+std::vector<NODE *>	childs_vectors_filler(std::vector<std::vector<NODE *> > vec, int level)
+{
+	std::vector<NODE *> childs;
+	for (int i = 0; i < vec[level].size(); i++)
+	{
+		if (vec[level][i] == nullptr)
+		{
+			childs.push_back(nullptr);
+			childs.push_back(nullptr);
+			continue ;
+		}
+		if (vec[level][i]->LEFT != nullptr)
+			childs.push_back(vec[level][i]->LEFT);
+		else
+			childs.push_back(nullptr);
+		if (vec[level][i]->RIGHT != nullptr)
+			childs.push_back(vec[level][i]->RIGHT);
+		else
+			childs.push_back(nullptr);
+	}
+	return childs;
+}
+
+std::vector<std::vector<NODE *> >	master_vector_filler(NODE *root, int height)
+{
+	int level = 0;
+	std::vector<std::vector<NODE *> > vec;
+	std::vector<NODE *> first;
+	first.push_back(root);
+	vec.push_back(first);
+	while (level < height)
+	{
+		vec.push_back(childs_vectors_filler(vec, level));
+		level++;
+	}
+	return vec;
+}
+
+// helper functions 
+void    set_width(int count, std::string str)
+{
+	for (int i = 0; i < count; i++)
+		PRINT << str;
+}
 
 int		tree_height(NODE *root)
 {
@@ -55,120 +131,12 @@ int		int_len(int n)
 	return count;
 }
 
-struct Trunk
-{
-	Trunk *prev;
-	std::string str;
-
-	Trunk(Trunk *prev, std::string str)
-	{
-		this->prev = prev;
-		this->str = str;
-	}
-};
-
-// Helper function to print branches of the binary tree
-void showTrunks(Trunk *p)
-{
-	if (p == nullptr)
-	{
-		return;
-	}
-
-	showTrunks(p->prev);
-	std::cout << p->str;
-}
-
-void printTree(Node *root, Trunk *prev, bool isLeft)
-{
-	if (root == nullptr)
-	{
-		return;
-	}
-
-	std::string prev_str = "    ";
-	Trunk *trunk = new Trunk(prev, prev_str);
-
-	printTree(root->_right, trunk, true);
-
-	if (!prev)
-	{
-		trunk->str = "───";
-	}
-	else if (isLeft)
-	{
-		trunk->str = "┌────┤";
-		prev_str = "    │";
-	}
-	else
-	{
-		trunk->str = "└────┤";
-		prev->str = prev_str;
-	}
-
-	showTrunks(trunk);
-	std::cout << " " << root->_value << std::endl;
-
-	if (prev)
-	{
-		prev->str = prev_str;
-	}
-	trunk->str = "    │";
-
-	printTree(root->_left, trunk, false);
-}
-
-std::vector<NODE *>	childs_vectors_filler(std::vector<std::vector<NODE *> > vec, int level)
-{
-	std::vector<NODE *> childs;
-	for (int i = 0; i < vec[level].size(); i++)
-	{
-		if (vec[level][i] == nullptr)
-		{
-			childs.push_back(nullptr);
-			childs.push_back(nullptr);
-			continue ;
-		}
-		if (vec[level][i]->LEFT != nullptr)
-			childs.push_back(vec[level][i]->LEFT);
-		else
-			childs.push_back(nullptr);
-		if (vec[level][i]->RIGHT != nullptr)
-			childs.push_back(vec[level][i]->RIGHT);
-		else
-			childs.push_back(nullptr);
-	}
-	return childs;
-}
-
-std::vector<std::vector<NODE *> >	master_vector_filler(NODE *root, int height)
-{
-	std::vector<std::vector<NODE *> > vec;
-	std::vector<NODE *> first;
-	first.push_back(root);
-	int level = 0;
-	vec.push_back(first);
-	while (level < height)
-	{
-		vec.push_back(childs_vectors_filler(vec, level));
-		level++;
-	}
-	return vec;
-}
-
-void    set_width(int count, std::string str)
-{
-	for (int i = 0; i < count; i++)
-		PRINT << str;
-}
-
-// might get better
 void    print_node(NODE *node, bool left_child, bool right_child)
 {
 	if (!left_child)
 		PRINT << "│";
-	PRINT << node->_value;
-	int len = CONTENT_LEN - int_len(node->_value);
+	PRINT << node->CONTENT;
+	int len = CONTENT_LEN - int_len(node->CONTENT);
 	set_width(len, " ");
 	if (!right_child)
 		PRINT << "│";
@@ -188,13 +156,56 @@ void	print_right_branch(int len)
 	PRINT << "┐";
 }
 
+// horizontal view
+void	showbranches(Branch *p)
+{
+	if (p == nullptr)
+		return;
+	showbranches(p->prev);
+    if (p->str == BIG_SPAN && p->prev && p->prev->str == BIG_TRUNK)
+        PRINT << SMALL_SPAN;
+    else if (p->str == BIG_TRUNK && p->prev && p->prev->str == BIG_TRUNK)
+        PRINT << SMALL_TRUNK;
+    else
+    	PRINT << p->str;
+}
+
+void	print_tree_horizontal_view(NODE *root, Branch *prev, bool is_left)
+{
+	if (root == nullptr)
+		return;
+
+    std::string	prev_str = BIG_SPAN;
+	Branch *branch = new Branch(prev, prev_str);
+
+	print_tree_horizontal_view(root->RIGHT, branch, true);
+	if (!prev)
+		branch->str = ROOT_TRUNK;
+	else if (is_left)
+	{
+		branch->str = LEFT_TRUNK;
+		prev_str = BIG_TRUNK;
+	}
+	else
+	{
+		branch->str = RIGHT_TRUNK;
+		prev->str = prev_str;
+	}
+	showbranches(branch);
+	PRINT << root->CONTENT << std::endl;
+	if (prev)
+		prev->str = prev_str;
+	branch->str = BIG_TRUNK;
+	print_tree_horizontal_view(root->LEFT, branch, false);
+}
+
+// vertical view
 void	print_level(std::vector<NODE *> vec, int level, int height, int factor, int branch_len)
 {
 	bool is_first = true;
 	for (int i = 0; i < vec.size(); i++)
 	{
-		int tmp = (level == height) ? (pow(2.0, factor) - (is_first ? 1 : LEAFS_SPAN)) : (is_first ? pow(2.0, factor) - 1 - branch_len : pow(2.0, factor + 1) - NODE_WIDTH - (branch_len * 2));
-		set_width(tmp, " ");
+		set_width(level == height ? (pow(2.0, factor) - (is_first ? 1 : LEAFS_SPAN)) : (is_first ? pow(2.0, factor) - 1 - branch_len : pow(2.0, factor + 1) - NODE_WIDTH - (branch_len * 2)), " ");
 		if (is_first)
 			is_first = false;
 		if (vec[i] == nullptr)
@@ -211,8 +222,8 @@ void	print_level(std::vector<NODE *> vec, int level, int height, int factor, int
 			print_right_branch(branch_len);
 		else
 			set_width(level != height ? branch_len : 0, " ");
-		}
-	NEW_LINE;
+	}
+	PRINT << NEW_LINE;
 }
 
 void	branch_printer(int len, NODE *node)
@@ -253,7 +264,7 @@ void	print_vertical_branches_mid(int branch_len, int factor, std::vector<NODE *>
 		if (is_first)
 			is_first = false;
 	}
-	NEW_LINE;
+	PRINT << NEW_LINE;
 }
 
 void	print_leafs_frame(std::vector<NODE *> vec)
@@ -269,7 +280,7 @@ void	print_leafs_frame(std::vector<NODE *> vec)
 		if (is_first)
 			is_first = false;
 	}
-	NEW_LINE;
+	PRINT << NEW_LINE;
 }
 
 void	print_vertical_branches_top(int branch_len, int factor, std::vector<NODE *> vec)
@@ -289,7 +300,7 @@ void	print_vertical_branches_top(int branch_len, int factor, std::vector<NODE *>
 		if (is_first)
 			is_first = false;
 	}
-	NEW_LINE;
+	PRINT << NEW_LINE;
 }
 
 void	print_vertical_branches_bottom(int branch_len, int factor, std::vector<NODE *> vec, bool before_last)
@@ -310,13 +321,11 @@ void	print_vertical_branches_bottom(int branch_len, int factor, std::vector<NODE
 		if (is_first)
 			is_first = false;
 	}
-	NEW_LINE;
+	PRINT << NEW_LINE;
 }
 
-void    print_tree(NODE *root)
+void    print_tree_vertical_view(std::vector<std::vector<NODE *> > vec, int height)
 {
-	int height = tree_height(root) - 1;
-	std::vector<std::vector<NODE *> > vec = master_vector_filler(root, height);
 	for (int level = 0; level < vec.size(); level++)
 	{
 		int factor = height - level + 2;
@@ -325,7 +334,7 @@ void    print_tree(NODE *root)
 		{
 			set_width(pow(2.0, factor) - 1, " ");
 			PRINT << FRAME_TOP;
-			NEW_LINE;
+			PRINT << NEW_LINE;
 		}
 		print_level(vec[level], level, height, factor, branch_len);
 		if (level != height)
@@ -337,4 +346,16 @@ void    print_tree(NODE *root)
 		else
 			print_leafs_frame(vec[height]);
 	}
+}
+
+void	print_tree(NODE *root, int flags)
+{
+	PRINT << NEW_LINE;
+	int height = tree_height(root) - 1;
+	std::vector<std::vector<NODE *> > vec = master_vector_filler(root, height);
+	if (flags == V_VIEW)
+		print_tree_vertical_view(vec, height);
+	else if (flags == H_VIEW)
+		print_tree_horizontal_view(root, nullptr, false);
+	PRINT << NEW_LINE;
 }
