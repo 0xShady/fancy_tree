@@ -123,13 +123,13 @@ void	print_level(std::vector<NODE *> vec, int level, int height, int factor, int
 	bool is_first = true;
 	for (int i = 0; i < vec.size(); i++)
 	{
-		int ratio;
 		if (level == height)
 		{
 			set_width(pow(2.0, factor) - (is_first ? 1 : 2), " ");
 			if (vec[i] == nullptr)
 			{
 				set_width(NODE_WIDTH, " ");
+				is_first = false;
 				continue;
 			}
 			std::cout << "│";
@@ -142,7 +142,8 @@ void	print_level(std::vector<NODE *> vec, int level, int height, int factor, int
 			set_width(pow(2.0, factor) - 1 - branch_len, " ");
 			if (vec[i] == nullptr)
 			{
-				set_width(NODE_WIDTH, " ");
+				set_width(NODE_WIDTH + branch_len * 2, " ");
+				is_first = false;
 				continue;
 			}
 			if (vec[i]->LEFT != nullptr)

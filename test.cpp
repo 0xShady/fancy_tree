@@ -19,7 +19,7 @@ int main()
     // root->_right->_left->_right = new Node(1338);
     root->_right->_right->_left = new Node(1134);
     root->_right->_right->_right = new Node(1145);
-    root->_left->_left->_left->_left = new Node(2216);
+    // root->_left->_left->_left->_left = new Node(2216);
     root->_left->_left->_left->_right = new Node(1457);
     root->_left->_left->_right->_left = new Node(1853);
     root->_left->_left->_right->_right = new Node(1934);
@@ -35,8 +35,8 @@ int main()
     root->_right->_right->_left->_right = new Node(2996);
     root->_right->_right->_right->_left = new Node(3067);
     root->_right->_right->_right->_right = new Node(3166);
-    root->_left->_left->_left->_left->_left = new Node(3662);
-    root->_left->_left->_left->_left->_right = new Node(3363);
+    // root->_left->_left->_left->_left->_left = new Node(3662);
+    // root->_left->_left->_left->_left->_right = new Node(3363);
     root->_left->_left->_left->_right->_left = new Node(3435);
     root->_left->_left->_left->_right->_right = new Node(3435);
     root->_left->_left->_right->_left->_left = new Node(7836);
