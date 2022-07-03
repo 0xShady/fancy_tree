@@ -149,12 +149,18 @@ void	print_level(std::vector<NODE *> vec, int level, int height, int factor, int
 			if (vec[i]->LEFT != nullptr)
 				print_left_branch(branch_len);
 			else
-				set_width(branch_len + 1, " ");
+			{
+				set_width(branch_len, " ");
+				std::cout << "│";
+			}
 			print_node(vec[i]);
 			if (vec[i]->RIGHT != nullptr)
 				print_right_branch(branch_len);
 			else
-				set_width(branch_len + 1, " ");
+			{
+				std::cout << "│";
+				set_width(branch_len, " ");
+			}
 			is_first = false;
 		}
 		else
