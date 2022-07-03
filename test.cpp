@@ -47,7 +47,8 @@ int main()
     root->_left->_right->_left->_left->_right = new Node(4541);
     root->_left->_right->_left->_right->_left = new Node(4642);
 
-    print_tree(root);
+    // print_tree(root);
+    printTree(root, nullptr, false);
 
     // std::cout << ">>" << root->_left->_left->_left->_value << std::endl;
     // std::cout << ">>" << root->_right->_right->_right->_value << std::endl;
