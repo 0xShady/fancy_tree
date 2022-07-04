@@ -3,7 +3,6 @@
 
 int main()
 {
-    // Construct above tree
     Node *root = new Node(1000);
     root->_left = new Node(2753);
     root->_right = new Node(3565);
@@ -49,18 +48,4 @@ int main()
 
     print_tree(root, V_VIEW);
     print_tree(root, H_VIEW);
-
-
-    // std::cout << ">>" << root->_left->_left->_left->_value << std::endl;
-    // std::cout << ">>" << root->_right->_right->_right->_value << std::endl;
-
-    // print_tree(root);
-    // for (auto &i : res)
-    // {
-    //     for (auto &j : i)
-    //     {
-    //         std::cout << j << " ";
-    //     }
-    //     std::cout << std::endl;
-    // }
 }
