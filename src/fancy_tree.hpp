@@ -6,15 +6,19 @@
 #include <cmath>
 
 //header file that contains Node definition
-#include "../test.hpp"
+#include "test.hpp"
 
 // Constants values
 #define LEAFS_SPAN 2
 #define NODE_WIDTH 6
 #define CONTENT_LEN 4
 
+// parameter flags
 #define H_VIEW 0x00
 #define V_VIEW 0x01
+
+// Node class
+#define NODE Node
 
 // Node class attributes
 #define LEFT _left
@@ -22,8 +26,6 @@
 #define PARENT _parent
 #define CONTENT _value
 
-// Node class
-#define NODE Node
 
 // vertical view
 #define TOP_LEFT_FRAME "┌───┴┐"
@@ -135,8 +137,9 @@ void    print_node(NODE *node, bool left_child, bool right_child)
 {
 	if (!left_child)
 		PRINT << "│";
+	PRINT << " ";
 	PRINT << node->CONTENT;
-	int len = CONTENT_LEN - int_len(node->CONTENT);
+	int len = 3 - int_len(node->CONTENT);
 	set_width(len, " ");
 	if (!right_child)
 		PRINT << "│";
