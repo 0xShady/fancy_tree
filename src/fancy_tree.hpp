@@ -8,6 +8,19 @@
 //header file that contains Node definition
 #include "test.hpp"
 
+/*===================Node====================*/
+
+// Node class
+#define NODE Node<T>
+
+// Node class attributes
+#define LEFT _left				// left attribute
+#define RIGHT _right			// right attribute
+#define PARENT _parent			// parent attribute (can be ignnored)
+#define CONTENT _value			// data attribute + element of pair(if exists)
+
+/*===========================================*/
+
 // Constants values
 #define LEAFS_SPAN 2
 #define NODE_WIDTH 6
@@ -16,15 +29,6 @@
 // Flags
 #define H_VIEW 0x00				// for Horizontal view
 #define V_VIEW 0x01				// for Vertical view
-
-// Node class attributes
-#define LEFT _left				// left attribute
-#define RIGHT _right			// right attribute
-#define PARENT _parent			// parent attribute (can be ignnored)
-#define CONTENT _value			// data attribute + element of pair(if exists)
-
-// Node class
-#define NODE Node<T>
 
 // vertical view TRUNKS
 #define TOP_LEFT_FRAME "┌───┴┐"
